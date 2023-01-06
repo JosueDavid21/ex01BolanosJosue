@@ -78,7 +78,7 @@
       <recent name="D:\Documentos\IntelliJProjects\ex01BolanosJosue\src\main\resources\META-INF" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Servidor">
+  <component name="RunManager" selected="Gradle.ex01BolanosJosue [installDist]">
     <configuration name="Servidor" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.distribuida.Servidor" />
       <module name="ex01BolanosJosue.main" />
