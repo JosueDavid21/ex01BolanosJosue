@@ -19,7 +19,7 @@ public class BookServiceImpl implements BookService {
     public List<Book> findAll() {
         List<Book> list = null;
         try {
-            Handle handle = dbConfig.conectionDB();
+            Handle handle = dbConfig.conectionDB().open();
             list = handle.createQuery("SELECT * FROM Books").mapToBean(Book.class).list();
             handle.close();
         }catch (Exception e) {
@@ -31,7 +31,7 @@ public class BookServiceImpl implements BookService {
     public Book findById(Integer id) {
         Book book = null;
         try {
-            Handle handle = dbConfig.conectionDB();
+            Handle handle = dbConfig.conectionDB().open();
             List<Book> books = handle.createQuery("SELECT * FROM public.books WHERE id = " + id + ";")
                     .mapToBean(Book.class).list();
             if(books.size()>0){
@@ -50,7 +50,7 @@ public class BookServiceImpl implements BookService {
         Book book = null;
         try{
             book = jsonb.fromJson(json, Book.class);
-            Handle handle = dbConfig.conectionDB();
+            Handle handle = dbConfig.conectionDB().open();
             handle.createUpdate("INSERT INTO books (id, isbn, title, author, price) " +
                             "VALUES (:id, :isbn, :title, :author, :price)")
                     .bindBean(book)
@@ -65,7 +65,7 @@ public class BookServiceImpl implements BookService {
     public String deleteBook(Integer id){
         String response = "No se pudo eliminar el libro....";
         try{
-            Handle handle = dbConfig.conectionDB();
+            Handle handle = dbConfig.conectionDB().open();
             int state=handle.execute("DELETE FROM books " +
                             "WHERE id=" + id + ";");
             if(state==1){
@@ -84,7 +84,7 @@ public class BookServiceImpl implements BookService {
         try{
             book = jsonb.fromJson(jsonBook, Book.class);
             book.setId(id);
-            Handle handle = dbConfig.conectionDB();
+            Handle handle = dbConfig.conectionDB().open();
             handle.createUpdate("UPDATE books SET id= :id, isbn= :isbn, title= :title, author= :author, price= :price " +
                             "WHERE id=" + id + ";")
                     .bindBean(book)

@@ -2,12 +2,10 @@ package com.distribuida.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Produces;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 
 import javax.sql.DataSource;
@@ -26,15 +24,28 @@ public class DbConfig {
     @ConfigProperty(name="db.url")
     String dbUrl;
 
+    @Inject
+    @ConfigProperty(name="db.driverClassName")
+    String dbDriverClassName;
+
+    @Inject
+    @ConfigProperty(name="db.maximumPoolSize")
+    int dbMaxPoolSize;
+
+    @Inject
+    @ConfigProperty(name="db.maxLifetime")
+    int dbMaxLifeTime;
+
     @Produces
     @ApplicationScoped
-    public Handle conectionDB(){
-        Jdbi jdbi = Jdbi.create(poolConection());
-        return  jdbi.open();
-    }
-
-    private DataSource poolConection(){
-        HikariConfig config = new HikariConfig("./src/main/resources/META-INF/hikari-config.properties");
-        return new HikariDataSource(config);
+    public Jdbi conectionDB(){
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setDriverClassName(dbDriverClassName);
+        dataSource.setJdbcUrl(dbUrl);
+        dataSource.setUsername(dbUser);
+        dataSource.setPassword(dbPassword);
+        dataSource.setMaximumPoolSize(dbMaxPoolSize);
+        dataSource.setMaxLifetime(dbMaxLifeTime);
+        return Jdbi.create(dataSource);
     }
 }
